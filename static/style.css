@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+}
+
+/* Contêiner do Calendário e do Botão */
+.calendar-container {
+    display: flex;
+    flex-direction: column; /* Coloca os itens em uma coluna */
+    align-items: center; /* Centraliza os itens */
+
+}
+
+
+.calendar-container button{
+    margin-left: auto; /* Coloca o button alinhado a esquerda */
+    margin-bottom: 5px; /* colocar uma margem abaixo do botão */
+    padding-left: 25px; /* Aumenta o tamanho do botão a esquerda */
+    
+}
+
+/* Estilos do botão "Adicionar Evento" */
+.botao-adicionar {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.botao-adicionar:hover {
+    background-color: #45a049;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* Garante 7 colunas */
+    gap: 10px; /* Espaçamento entre as células */
+    grid-template-rows: repeat(6, 50px); /* Garante 6 linhas */
+}
+
+.days-of-week {
+    display: contents;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#calendario {
+    width: 900px; /* Ajusta a largura para preencher a área disponível */
+    height: 900px; /* Aumenta a altura do calendário */
+    margin: 0 auto; /* Centraliza o calendário */
+}
+
+
+.calendar div {
+    display: flex; /* Permite flexbox para alinhamento */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    padding: 10px;
+    text-align: center; /* Garante que o conteúdo do dia fique centralizado */
+    font-size: 14px;
+    line-height: 20px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    min-height: 20px; /* Garantir que todas as células tenham altura mínima */
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Estilos do Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
