@@ -4,54 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agendamento de Veículos</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.0.0/index.global.min.css"> <!-- css padrão do fullcallendar -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.0.0/index.global.min.js"></script> <!-- js do fullcalendar -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.0.0/locales/pt-br.global.min.js"></script> <!-- Necessario para tradução -->
-    <link rel="stylesheet" href="/static/style.css">  <!-- Css principal -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.0.0/index.global.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.0.0/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.0.0/locales/pt-br.global.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-
-    <!-- Div pai do calendario -->
     <div class="calendar-container">
-        <!-- Botão para adicionar evento -->
         <button class="botao-adicionar" onclick="openAddEventModal()">Agendar Veículo</button>
-        <!-- Calendário -->
         <div id="calendario"></div>
     </div>
-    
 
     <!-- Modal para detalhes do evento -->
-<div id="myModal" class="modal">
-    <div class="modal-content">
-        <span class="close" id="closeModal">&times;</span>
-        <h2>Detalhes do Agendamento</h2>
-        <p id="eventDetails">Aqui irão aparecer os detalhes do agendamento.</p>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Detalhes do Agendamento</h2>
+            <p id="eventDetails">Aqui irão aparecer os detalhes do agendamento.</p>
+        </div>
     </div>
-</div>
 
-<!-- Modal para registrar eventos -->
-<div id="addEventModal" class="modal">
-    <div class="modal-content">
-        <span class="close" id="closeAddEventModal">&times;</span>
-        <h2>Agendamento</h2>
-        <form id="eventForm">
-            <label for="title">Título:</label>
-            <input type="text" id="title" name="title" required><br><br>
+    <!-- Modal para registrar eventos -->
+    <div id="addEventModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeAddEventModal">&times;</span>
+            <h2>Agendamento</h2>
+            <form id="eventForm">
+                <label for="title">Título:</label>
+                <input type="text" id="title" name="title" required><br><br>
 
-            <label for="description">Descrição:</label>
-            <textarea id="description" name="description" required></textarea><br><br>
+                <label for="description">Descrição:</label>
+                <textarea id="description" name="description" required></textarea><br><br>
 
-            <label for="eventDate">Data:</label>
-            <input type="date" id="eventDate" name="eventDate" required><br><br>
+                <label for="eventDate">Data:</label>
+                <input type="date" id="eventDate" name="eventDate" required><br><br>
 
-            <label for="eventTime">Hora:</label>
-            <input type="time" id="eventTime" name="eventTime" required><br><br>
+                <label for="eventTime">Hora:</label>
+                <input type="time" id="eventTime" name="eventTime" required><br><br>
 
-            <button type="submit">Salvar Agendamento</button>
-        </form>
+                <button type="submit">Salvar Agendamento</button>
+            </form>
+        </div>
     </div>
-</div>
-
 
     <script>
         let calendarioEL = document.getElementById('calendario');
@@ -60,12 +54,11 @@
         let span = document.getElementsByClassName("close")[0];
         let eventDetails = document.getElementById("eventDetails");
         let eventForm = document.getElementById("eventForm");
-        let events = [];  // Lista de eventos armazenados
 
         let calendario = new FullCalendar.Calendar(calendarioEL, {
-            locale: 'pt-br', // Configurando o idioma para português do Brasil
+            locale: 'pt-br',
             dateClick: function(info) {
-                let clickedDate = new Date(info.dateStr + 'T00:00:00'); // Garantir que a hora seja 00:00:00 para evitar problemas de fuso horário
+                let clickedDate = new Date(info.dateStr + 'T00:00:00');
                 let formattedDate = clickedDate.toLocaleDateString('pt-BR', {
                     weekday: 'long', 
                     year: 'numeric', 
@@ -73,24 +66,22 @@
                     day: 'numeric'
                 });
                 eventDetails.innerHTML = `Você clicou na data: ${formattedDate}`;
-                modal.style.display = "block"; // Exibe o modal
+                modal.style.display = "block";
             },
-            events: events,  // Use events no FullCalendar
+            events: [],  // Inicialmente vazio, será preenchido com eventos do backend
             eventClick: function(info) {
                 eventDetails.innerHTML = `Título: ${info.event.title}<br>Descrição: ${info.event.extendedProps.description}`;
-                modal.style.display = "block"; // Exibe o modal
+                modal.style.display = "block";
             }
         });
 
         calendario.render();
 
-        // Quando o usuário clicar no "X" do modal, ele será fechado
         span.onclick = function() {
             modal.style.display = "none";
-            addEventModal.style.display = "none"; // Fecha o modal de adicionar evento
+            addEventModal.style.display = "none";
         }
 
-        // Se o usuário clicar fora do modal, ele também será fechado
         window.onclick = function(event) {
             if (event.target == modal || event.target == addEventModal) {
                 modal.style.display = "none";
@@ -98,41 +89,62 @@
             }
         }
 
-        // Função para abrir o modal de adicionar evento
         function openAddEventModal() {
             addEventModal.style.display = "block";
         }
 
-        // Evento de submit do formulário para adicionar novo evento
-        eventForm.onsubmit = function(event) {
-            event.preventDefault(); // Evita que o formulário seja enviado de forma tradicional
+        eventForm.onsubmit = async function(event) {
+            event.preventDefault();
 
             let title = document.getElementById("title").value;
             let description = document.getElementById("description").value;
-            let eventDate = document.getElementById("eventDate").value;  // Data do evento
-            let eventTime = document.getElementById("eventTime").value;  // Hora do evento
+            let eventDate = document.getElementById("eventDate").value;
+            let eventTime = document.getElementById("eventTime").value;
 
             if (!eventDate || !eventTime) {
                 alert("Por favor, preencha a data e hora do evento.");
                 return;
             }
 
-            // Combinando a data e a hora para criar uma data completa
             let eventStart = new Date(eventDate + 'T' + eventTime);
 
-            // Adiciona o evento ao calendário
-            let newEvent = {
-                title: title,
-                start: eventStart.toISOString(),
-                description: description,
-                color: '#ff9f00'
-            };
+            try {
+                const response = await fetch('/add_event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `title=${encodeURIComponent(title)}&startDate=${encodeURIComponent(eventStart.toISOString())}&description=${encodeURIComponent(description)}`
+                });
 
-            events.push(newEvent);  // Armazena o evento
-            calendario.addEvent(newEvent);  // Adiciona o evento no calendário
-            addEventModal.style.display = "none"; // Fecha o modal após adicionar
+                if (!response.ok) {
+                    throw new Error('Erro ao adicionar evento');
+                }
+
+                const newEvent = await response.json();
+                calendario.addEvent(newEvent);
+                addEventModal.style.display = "none";
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao adicionar evento');
+            }
         }
-    </script>
 
+        async function loadEvents() {
+            try {
+                const response = await fetch('/get_events');
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar eventos');
+                }
+                const events = await response.json();
+                calendario.addEventSource(events);
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao carregar eventos');
+            }
+        }
+
+        loadEvents();
+    </script>
 </body>
 </html>

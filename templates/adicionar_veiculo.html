@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Veículo</title>
+</head>
+<body>
+    <h1>Adicionar Veículo</h1>
+
+    <form id="formAdicionarVeiculo">
+        <label for="placa">Placa:</label>
+        <input type="text" id="placa" name="placa" required><br><br>
+
+        <label for="marca">Marca:</label>
+        <input type="text" id="marca" name="marca" required><br><br>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+            <option value="Disponível">Disponível</option>
+            <option value="Em uso">Em uso</option>
+            <option value="Manutenção">Manutenção</option>
+        </select><br><br>
+
+        <button type="submit">Adicionar Veículo</button>
+    </form>
+
+    <p id="mensagemVeiculo"></p>
+
+    <script>
+        document.getElementById('formAdicionarVeiculo').onsubmit = async function (event) {
+            event.preventDefault();
+
+            const placa = document.getElementById('placa').value;
+            const marca = document.getElementById('marca').value;
+            const status = document.getElementById('status').value;
+
+            try {
+                const response = await fetch('/adicionar_veiculo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        placa: placa,
+                        marca: marca,
+                        status: status
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('mensagemVeiculo').innerText = `Veículo adicionado com sucesso! ID: ${data.id}`;
+                } else {
+                    document.getElementById('mensagemVeiculo').innerText = `Erro: ${data.error}`;
+                }
+            } catch (error) {
+                document.getElementById('mensagemVeiculo').innerText = `Erro inesperado: ${error.message}`;
+            }
+        };
+    </script>
+</body>
+</html>

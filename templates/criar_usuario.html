@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Usuário</title>
+</head>
+<body>
+    <h1>Criar Usuário</h1>
+
+    <form id="formCriarUsuario">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required><br><br>
+
+        <label for="id_setor">ID do Setor:</label>
+        <input type="number" id="id_setor" name="id_setor" required><br><br>
+
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" name="tipo" required>
+            <option value="Condutor">Condutor</option>
+            <option value="Comum">Comum</option>
+        </select><br><br>
+
+        <button type="submit">Criar Usuário</button>
+    </form>
+
+    <p id="mensagemUsuario"></p>
+
+    <script>
+        document.getElementById('formCriarUsuario').onsubmit = async function (event) {
+            event.preventDefault();
+
+            const nome = document.getElementById('nome').value;
+            const idSetor = document.getElementById('id_setor').value;
+            const tipo = document.getElementById('tipo').value;
+
+            try {
+                const response = await fetch('/criar_usuario', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nome: nome,
+                        id_setor: idSetor,
+                        tipo: tipo
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('mensagemUsuario').innerText = `Usuário criado com sucesso! ID: ${data.id}`;
+                } else {
+                    document.getElementById('mensagemUsuario').innerText = `Erro: ${data.error}`;
+                }
+            } catch (error) {
+                document.getElementById('mensagemUsuario').innerText = `Erro inesperado: ${error.message}`;
+            }
+        };
+    </script>
+</body>
+</html>
